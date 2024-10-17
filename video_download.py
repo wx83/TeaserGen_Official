@@ -95,7 +95,7 @@ def get_playlist_urls_and_titles(playlist_url, csv_name):
         'force_generic_extractor': False,  # Allow yt-dlp to use specific extractors for YouTube
         'geo_bypass': True,  # Bypass geo-restrictions
         'skip_download': True,  # Do not download the videos
-        'youtube_include_dash_manifest': False,  # Speed up processing by not downloading dash manifests
+        'youtube_include_dash_manifest': False,  
     }
     
 

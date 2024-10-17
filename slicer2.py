@@ -16,9 +16,9 @@ def get_rms(
     y = np.pad(y, padding, mode=pad_mode)
 
     axis = -1
-    # put our new within-frame axis at the end for now
+
     out_strides = y.strides + tuple([y.strides[axis]])
-    # Reduce the shape on the framing axis
+
     x_shape_trimmed = list(y.shape)
     x_shape_trimmed[axis] -= frame_length - 1
     out_shape = tuple(x_shape_trimmed) + tuple([frame_length])
@@ -30,7 +30,7 @@ def get_rms(
     else:
         target_axis = axis + 1
     xw = np.moveaxis(xw, -1, target_axis)
-    # Downsample along the target axis
+
     slices = [slice(None)] * xw.ndim
     slices[axis] = slice(0, None, hop_length)
     x = xw[tuple(slices)]

@@ -47,10 +47,10 @@ def extract_audio_wav_ffmpeg(input_video_path, output_audio_path):
         output_audio_path (str): The path where the output WAV audio file will be saved.
     """
     try:
-        # Execute the ffmpeg command to extract audio
+
         ffmpeg.input(str(input_video_path)).output(str(output_audio_path), acodec='pcm_s16le', ar='44100').run()
     except ffmpeg.Error as e:
-        # Print the stderr output from ffmpeg for debugging
+
         print("ffmpeg failed with stderr:", e.stderr.decode('utf8'))
         raise RuntimeError("Failed to extract audio with ffmpeg") from e
 
@@ -80,7 +80,7 @@ def audio_extract_scale_zeroshot(video_name_path, input_dir, out_dir):
     """
     video_urls = load_txt(video_name_path)
     for video_name in video_urls:
-        # os.makedirs(out_dir, exist_ok=True)
+
         video_path = input_dir / f"{video_name}.mp4"
 
         audio_path =  out_dir / f"{video_name}.wav"
@@ -119,7 +119,7 @@ def process_audio_chunk(chunk_data, sample_rate):
     try:
         # Thread-safe separation assumed
         separated_audio, sample_rates = ensemble_net.separate_music_file(chunk_data, sample_rate)
-        # print(f"separate_audio keys = {separated_audio.keys()}")
+
     except Exception as e:
         print(f"Error processing chunk: {e}")
         torch.cuda.empty_cache()  # Clear cache on error as well
@@ -167,18 +167,16 @@ def separate_sf_song(video_name,audio_path, out_dir, fig_dir, slicer, threshold,
                 if zero_shot == True:
                     output_file_path = out_dir / f"{video_name}_{key}.wav"
                     sf.write(output_file_path, track, 44100)
-                # save_fig_part = out_dir / video_name[0] / video_name / f'{key}_{part}.wav'
-                # save_fig = fig_dir / video_name[0]  / video_name / f'{key}_{part}.png'
-                # plot_silence_db(save_fig_part, save_fig, threshold) # plog db_figure with figure
+
                 print(f"Processed {key} audio saved to {output_file_path}")
             else:
                 print(f"No {key} audio processed.")
-        # make the plot
+
 
     except:
         print(f"audio_path = {audio_path} cannot be found")
 
-# Assuming slicer and ensemble_net are already defined elsewhere
+
 
 def separate_sf_scale(video_name_path, input_dir, out_dir, fig_dir, slicer, threshold, part, zero_shot):
     """
@@ -187,7 +185,7 @@ def separate_sf_scale(video_name_path, input_dir, out_dir, fig_dir, slicer, thre
     """
     video_urls = load_txt(video_name_path)
     for video_name in video_urls:
-        # os.makedirs(out_dir, exist_ok=True)
+
 
         if zero_shot == False:
             parent_dir_out = out_dir / video_name[0] / video_name 
@@ -204,9 +202,7 @@ def separate_sf_scale(video_name_path, input_dir, out_dir, fig_dir, slicer, thre
             separate_sf_song(video_name,audio_path, out_dir, fig_dir, slicer, threshold, part, zero_shot)
 
 
-# TODO: silence plot over main contents
 
-# def intro_audio_separate(video_name_path, part):
 
 
 def audio_extract_main(video_name_path, input_dir, out_dir, part, zeroshot):
@@ -214,8 +210,6 @@ def audio_extract_main(video_name_path, input_dir, out_dir, part, zeroshot):
         print("CUDA is available. GPU can be used.")
     else:
         print("CUDA is not available. Running on CPU.")
-    # input_dir = Path("/home/weihanx/videogpt/data_deepx/documentary/sliced_video")
-    # out_dir = Path("/home/weihanx/videogpt/data_deepx/documentary/audio_extract")
     if zeroshot == False:
         audio_extract_scale(video_name_path, input_dir, out_dir, part)
     else:
