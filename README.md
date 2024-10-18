@@ -11,5 +11,3 @@ Download Video:
 3) Separate Teaser From Body Contents: video_preprocess.py
 4) Audio Separation: audio_preprocess.py
 
-
-Please contact me if you have any questions: weihan.xu@duke.edu
