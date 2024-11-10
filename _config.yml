@@ -1,0 +1,16 @@
+theme: jekyll-theme-modernist
+title: Documentary Teaser Generation
+description: Subjective Test
+show_downloads: false
+icons:
+  homepage: fa-solid fa-globe-asia
+  video: fa-brands fa-youtube
+  paper: fa-solid fa-file-pdf
+  slides: fa-solid fa-file-pdf
+  poster: fa-solid fa-file-pdf
+  arxiv: fa-solid fa-archive
+  code: fa-brands fa-github
+  documentation: fa-solid fa-book
+  reviews: fa-solid fa-comments
+  demo: fa-solid fa-globe-asia
+  link: fa-solid fa-arrow-up-right-from-square
