@@ -236,7 +236,7 @@ def construct_csv(video_path, ground_truth_dir, search_dir, search_type, smoothe
 
         # Remove black frames, keeping only valid frames
         main_frame_root_path = Path(body_frame_dir) / video_name[0] / video_name
-        original_intro_matched_list = remove_all_black(original_intro_matched_arr, main_frame_root_path).tolist()
+        original_intro_matched_list = remove_all_black(original_intro_matched_arr, main_frame_root_path)
         original_intro_matched_no_black = [item for item in original_intro_matched_list if item != -1]
 
         # Calculate statistics for original intro
@@ -314,7 +314,7 @@ def get_clip_score_s(video_name_path, input_array_dir, decode_method, body_conte
     df.to_csv(output_dir, index=False)
 
 
-def get_saliency_score(video_name_path, input_array_dir, decode_method, saliency_curve_dir, sent_list_json, output_dir, smoothed):
+def get_saliency_score(video_name_path, input_array_dir, decode_method, saliency_curve_dir, sent_list_json, output_csv, smoothed):
 
     df = pd.DataFrame(columns=["Video_Name", "Saliency_Score"])
     video_name_list = load_txt(video_name_path)
@@ -342,7 +342,7 @@ def get_saliency_score(video_name_path, input_array_dir, decode_method, saliency
         df = pd.concat([df, row], ignore_index=True)
     average_dict = df.mean().to_dict()
     print(f"average_dict saliency score = {average_dict}")
-    df.to_csv(output_dir, index=False)
+    df.to_csv(output_csv, index=False)
 
 
 def generate_sentence_json_a2summ(video_name_path, output_dir):
@@ -366,22 +366,24 @@ if __name__ == "__main__":
     # video_path, csv_save_path, search_type
     search_type = "beam_search"
     narration_type = "gpt"
-    smoothed = True
+    smoothed = True # eavluate both smooth and no
     ### Annotation ###
     video_path = Path("/home/weihanx/videogpt/workspace/start_code/eval/final_eval.txt")
     ground_truth_dir = Path("/home/weihanx/videogpt/deepx_data6/actual_intro_cos_l2_20")
     folder_dir = Path("/home/weihanx/videogpt/workspace/transformer_prior/decode_result")
-    body_frame_dir = Path("/home/weihanx/videogpt/data_deepx/documentary/test_embedding/clip_frame_768_emb_main")
+    body_frame_dir = Path("/home/weihanx/videogpt/data_deepx/documentary/body_frame_test")
+    body_contents_emb = Path("/home/weihanx/videogpt/data_deepx/documentary/test_embedding/clip_frame_768_emb_main")
     sent_list_json = Path("/home/weihanx/videogpt/workspace/transformer_prior/test/test_gpt_sentence_list.json")
     ##### Output ####
-    search_dir = folder_dir / narration_type / search_type
-    csv_save_path = search_dir / f"smooth_{smoothed}_stats.csv"
+    search_dir = folder_dir / narration_type / search_type / "smooth"
+    output_dir = search_dir
+    csv_save_path = output_dir / f"smooth_{smoothed}_stats.csv"
     construct_csv(video_path, ground_truth_dir, search_dir, search_type, smoothed, body_frame_dir, csv_save_path)
 
     saliency_curve_dir = Path("/home/weihanx/videogpt/deepx_data6/gpt_demo/saliency_curve")
     output_csv_path = search_dir / f"smooth_{smoothed}_saliency.csv"
-    get_saliency_score(video_path, search_dir, search_type, saliency_curve_dir, sent_list_json, output_csv_path)
+    get_saliency_score(video_path, search_dir, search_type, saliency_curve_dir, sent_list_json, output_csv_path, smoothed)
 
     sent_embed_dir = Path("/home/weihanx/videogpt/data_deepx/documentary/test_embedding/clip_sentence_emb")
     output_csv_path = search_dir / f"smooth_{smoothed}_clipscore_s.csv"
-    get_clip_score_s(video_path, search_dir, search_type, sent_embed_dir, sent_list_json, output_csv_path)
+    get_clip_score_s(video_path, search_dir, search_type, body_contents_emb, sent_embed_dir, sent_list_json, output_dir, smoothed)
