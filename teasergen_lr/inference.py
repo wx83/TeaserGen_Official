@@ -1,6 +1,7 @@
 from decoding import *
-
-from transformer import CustomModel
+import sys
+sys.path.append("/home/weihanx/videogpt/workspace/transformer_prior")
+from model import CustomModel
 from dataset import SentenceImageDataset
 from torch.utils.data import DataLoader
 from pathlib import Path
@@ -8,7 +9,6 @@ import time
 import time
 import torch
 from pathlib import Path
-from torch.utils.data import DataLoader
 
 def load_model(apply_diffusion_prior, model_dir_path, device):
     model_dir = Path(model_dir_path)
@@ -36,9 +36,9 @@ def prepare_data(test_annotate_dir, sentence_emb_dir, sentence_json_intro_dir):
 
 def run_test(apply_diffusion_prior, model_dir_path, device, narration_type, decode_method, smooth, body_contents_dir, output_dir):
     test_dataloader = prepare_data(
-        "/home/weihanx/videogpt/workspace/transformer_prior/test_gpt.json",
-        "/home/weihanx/videogpt/deepx_data6/clip_sentence_emb_768_average",
-        "/home/weihanx/videogpt/workspace/transformer_prior/test_gpt_sentence_list.json"
+        "/home/weihanx/videogpt/workspace/transformer_prior/test/test_gpt.json", # test_annotate_dir
+        "/home/weihanx/videogpt/data_deepx/documentary/test_embedding/clip_sentence_emb", # sentence_emb_dir
+        "/home/weihanx/videogpt/workspace/transformer_prior/test/gpt_text_name.json" # sentence_json_intro_dir
     )
 
     model = load_model(apply_diffusion_prior, model_dir_path, device)
@@ -58,10 +58,12 @@ def run_test(apply_diffusion_prior, model_dir_path, device, narration_type, deco
         method_directory = 'greedy' if decode_method == 'greedy' else 'beam_search_window'
         output_path = Path(output_dir) / narration_type / method_directory / smooth_dir
         output_path.mkdir(parents=True, exist_ok=True)
-        sentence_list_json = Path("/home/weihanx/videogpt/workspace/transformer_prior/test_gpt_sentence_list.json")
+        if narration_type == "gpt":
+            sentence_list_json = Path("/home/weihanx/videogpt/workspace/transformer_prior/test_gpt_sentence_list.json")
+        
         if decode_method == "greedy":
             decode_greedy_sentence(1, output_embedding, mask, docu_name_list, Path(body_contents_dir), output_path, 1)
-        elif decode_method == "beam_search_window":
+        if decode_method == "beam_search_window":
             decode_beam_search_history(1, output_embedding, mask, docu_name_list, Path(body_contents_dir), 5, 10, output_path, 1, sentence_list_json, 1)
 
     end = time.time()
@@ -76,4 +78,12 @@ def model_config(model_path):
     print(f"total params = {total_params}")
 
 if __name__ == "__main__":
-    pass
+    apply_diffusion_prior = False
+    model_dir = Path("/home/weihanx/videogpt/workspace/transformer_prior/model/no_diffusion_prior/model_False_0_l2_prior_0111_narrator_True.pth")
+    device = 'cuda:0'
+    narration_type = 'gpt'
+    decode_method = 'beam_search_window'
+    smooth = True
+    body_contents_dir = Path("/home/weihanx/videogpt/data_deepx/documentary/test_embedding/clip_frame_768_emb_main")
+    output_dir = Path("/home/weihanx/videogpt/workspace/transformer_prior/decode_result")
+    run_test(apply_diffusion_prior, model_dir, device, narration_type, decode_method, smooth, body_contents_dir, output_dir)
