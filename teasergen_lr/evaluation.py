@@ -380,7 +380,7 @@ if __name__ == "__main__":
     csv_save_path = output_dir / f"smooth_{smoothed}_stats.csv"
     construct_csv(video_path, ground_truth_dir, search_dir, search_type, smoothed, body_frame_dir, csv_save_path)
 
-    saliency_curve_dir = Path("/home/weihanx/videogpt/deepx_data6/gpt_demo/saliency_curve")
+    saliency_curve_dir = Path("/home/weihanx/videogpt/deepx_data6/gpt_demo/saliency_curve_0925")
     output_csv_path = search_dir / f"smooth_{smoothed}_saliency.csv"
     get_saliency_score(video_path, search_dir, search_type, saliency_curve_dir, sent_list_json, output_csv_path, smoothed)
 
