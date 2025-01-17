@@ -158,16 +158,41 @@ def setup_dataloader(datasets, batch_size):
         'valid': DataLoader(datasets['eval'], batch_size=batch_size, shuffle=True, collate_fn=SentenceImageDataset.collate_fn)
     }
 
+def get_lr_multiplier(
+    step, warmup_steps, decay_end_steps, decay_end_multiplier
+):
+    """Return the learning rate multiplier with a warmup and decay schedule.
+
+    The learning rate multiplier starts from 0 and linearly increases to 1
+    after `warmup_steps`. After that, it linearly decreases to
+    `decay_end_multiplier` until `decay_end_steps` is reached.
+
+    """
+    if step < warmup_steps:
+        return (step + 1) / warmup_steps
+    if step > decay_end_steps:
+        return decay_end_multiplier
+    position = (step - warmup_steps) / (decay_end_steps - warmup_steps)
+    return 1 - (1 - decay_end_multiplier) * position
+
 
 def train(apply_diffusion_prior, type_loss, device, narrator_only, output_dir): 
     paths = setup_paths(narrator_only)
     wandb.init(project="transformer_prior", name=f"diffusion_prior_{apply_diffusion_prior}_narr_only_{narrator_only}_l2")
     train_list, eval_list = data_split(paths)
+    lr_warmup_steps = 5000
+    lr_decay_steps = 10000
+    lr_decay_multiplier = 0.1
+    grad_norm_clip = 1
     wandb.config = {
     "apply_transformer_prior": apply_diffusion_prior,
     "epochs": 15,
-    "batch_size": 8,
+    "batch_size": 4,
     "narrator_only": narrator_only,
+    "lr_warmup_steps": 5000, 
+    "lr_decay_steps": 10000,
+    "lr_decay_multiplier": 0.1,
+    "grad_norm_clip":1,
     }
     datasets = create_datasets(paths, train_list, eval_list)
     train_dataloader = setup_dataloader(datasets, 4)['train']
@@ -176,6 +201,7 @@ def train(apply_diffusion_prior, type_loss, device, narrator_only, output_dir):
     model = CustomModel(apply_diffusion_prior, device=device)
 
     model = model.to(device)
+
 
     if type_loss == "l2":
         criterion = nn.MSELoss()
@@ -186,7 +212,6 @@ def train(apply_diffusion_prior, type_loss, device, narrator_only, output_dir):
                                     [1, 40, 10]).to(device)
 
     optimizer = optim.AdamW(model.parameters(), lr=1e-4)
-
     num_epochs = 15
     batch_wise_training_loss = []
     batch_wise_val_loss = []
@@ -195,7 +220,6 @@ def train(apply_diffusion_prior, type_loss, device, narrator_only, output_dir):
     # from time import time
     # set gradient accumulate
     start_time = time.time()
-    accumulation_steps = 4
     for epoch in range(num_epochs):
         model.train()
         optimizer.zero_grad()  # Zero gradients at the start of the epoch
@@ -232,14 +256,13 @@ def train(apply_diffusion_prior, type_loss, device, narrator_only, output_dir):
             # average mean: batch size, dimension
             # print(f"transformer_output_mean shape = {transformer_output_mean.shape}, image_embeddings_mean shape = {image_embeddings_mean.shape}")
             loss = criterion(transformer_output_mean, image_embeddings_mean)
-            loss = loss / accumulation_steps # fix thed bug 
+            optimizer.zero_grad()   # clear last step
             loss.backward()
-            if (i + 1) % accumulation_steps == 0:
-                optimizer.step()  # Perform a single optimization step
-                optimizer.zero_grad()  # Zero gradients for the next accumulation
+            torch.nn.utils.clip_grad_norm_(
+                model.parameters(), grad_norm_clip
+            )
+            optimizer.step()  # Perform a single optimization step
 
-
-            
             # Accumulate the loss for this epoch
             epoch_loss += loss.item()
         # Print loss for the epoch
@@ -256,33 +279,35 @@ def train(apply_diffusion_prior, type_loss, device, narrator_only, output_dir):
         model.eval()
 
         val_loss = 0
-        for batch in valid_dataloader:
-            sentences, images, mask, docu_name, sentence_text = batch
+        with torch.no_grad():  # Essential for efficiency
+            val_loss = 0
+            for batch in valid_dataloader:
+                sentences, images, mask, docu_name, sentence_text = batch
 
-            sentences = sentences.to(device)
-            images = images.to(device)
-            mask = mask.to(device)
+                sentences = sentences.to(device)
+                images = images.to(device)
+                mask = mask.to(device)
 
-            transformer_output = model(sentences, mask, sentence_text)
-            # flip the mask
-            flipped_mask = ~mask.bool()
-            mask_expanded = flipped_mask.unsqueeze(-1)  # Shape: [batch_size, seq_len, 1]
-            masked_transformer_output = transformer_output * mask_expanded
+                transformer_output = model(sentences, mask, sentence_text)
+                # flip the mask
+                flipped_mask = ~mask.bool()
+                mask_expanded = flipped_mask.unsqueeze(-1)  # Shape: [batch_size, seq_len, 1]
+                masked_transformer_output = transformer_output * mask_expanded
 
-            transformer_output_sum = masked_transformer_output.sum(dim=1)
-            non_padded_count = flipped_mask.sum(dim=1, keepdim=True).clamp(min=1)  # Avoid division by zero
-            transformer_output_mean = transformer_output_sum / non_padded_count
+                transformer_output_sum = masked_transformer_output.sum(dim=1)
+                non_padded_count = flipped_mask.sum(dim=1, keepdim=True).clamp(min=1)  # Avoid division by zero
+                transformer_output_mean = transformer_output_sum / non_padded_count
 
-            masked_images = images * mask_expanded  
+                masked_images = images * mask_expanded  
 
-            image_embeddings_sum = masked_images.sum(dim=1)
-            image_non_padded_count = flipped_mask.sum(dim=1, keepdim=True).clamp(min=1)
-            image_embeddings_mean = image_embeddings_sum / image_non_padded_count
+                image_embeddings_sum = masked_images.sum(dim=1)
+                image_non_padded_count = flipped_mask.sum(dim=1, keepdim=True).clamp(min=1)
+                image_embeddings_mean = image_embeddings_sum / image_non_padded_count
 
-            loss = criterion(transformer_output_mean, image_embeddings_mean)
-            val_loss += loss.item()
-            batch_wise_training_loss.append(loss)
-            wandb.log({"batch_wise_val_loss": loss})
+                loss = criterion(transformer_output_mean, image_embeddings_mean)
+                val_loss += loss.item()
+                batch_wise_training_loss.append(loss)
+                wandb.log({"batch_wise_val_loss": loss})
         if epoch % 2 == 0:
             output_path = output_dir / f"checkpoint_epoch_{epoch}.pth"
             output_path.parent.mkdir(parents=True, exist_ok=True)
