@@ -1,4 +1,4 @@
-<div align="center">
+<div align="center", style="font-size: large;">
 
 TeaserGen: Generating Teasers for Long Documentaries
 
