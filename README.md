@@ -1,17 +1,17 @@
-# TeaserGen: Generating Teasers for Long Documentaries(ICLR 2025)
-https://arxiv.org/abs/2410.05586
+## TeaserGen: Generating Teasers for Long Documentaries
 
-## Dataset and Pretrained Model
-
-
-## Train
+### Dataset and Pretrained Model
 
 
-## Inference
+### Train
 
 
-## Citation
+### Inference
 
+
+### Citation
+
+```bibtex
 @inproceedings{xu2025teasergen,
     title={TeaserGen: Generating Teasers for Long Documentaries},
     author={Weihan Xu and Paul Pu Liang and Haven Kim and Julian McAuley and Taylor Berg-Kirkpatrick and Hao-Wen Dong},
