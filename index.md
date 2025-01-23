@@ -2,7 +2,8 @@
 
 TeaserGen: Generating Teasers for Long Documentaries
 
-<a href="https://wx83.github.io/"> Weihan Xu, <a href="https://pliang279.github.io/"> Paul Pu Liang </a>, Haven Kim, <a href="https://cseweb.ucsd.edu/~jmcauley/" >Julian McAuley</a>, <a href="https://cseweb.ucsd.edu/~tberg/"> Taylor Berg-Kirkpatrick</a>,  <a href="https://hermandong.com/">Hao-Wen Dong</a>
+<a href="https://wx83.github.io/">Weihan Xu</a>, <a href="https://pliang279.github.io/">Paul Pu Liang</a>, Haven Kim, <a href="https://cseweb.ucsd.edu/~jmcauley/">Julian McAuley</a>, <a href="https://cseweb.ucsd.edu/~tberg/">Taylor Berg-Kirkpatrick</a>, <a href="https://hermandong.com/">Hao-Wen Dong</a>
+
 </div>
 
 ---
