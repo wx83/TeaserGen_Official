@@ -1,6 +1,6 @@
 theme: jekyll-theme-modernist
-title: Documentary Teaser Generation
-description: Demo Page
+title: TeaserGen: Generating Teasers for Long Documentaries 
+description: ICLR 2025
 show_downloads: false
 icons:
   homepage: fa-solid fa-globe-asia
