@@ -1,13 +1,13 @@
+<div align="center">
+
+TeaserGen: Generating Teasers for Long Documentaries
+
+<a href="https://wx83.github.io/"> Weihan Xu, <a href="https://pliang279.github.io/"> Paul Pu Liang </a>, Haven Kim, <a href="https://cseweb.ucsd.edu/~jmcauley/" >Julian McAuley</a>, <a href="https://cseweb.ucsd.edu/~tberg/"> Taylor Berg-Kirkpatrick</a>,  <a href="https://hermandong.com/">Hao-Wen Dong</a>
+</div>
+
+---
 ## Contents
-<!-- 1) Section 0: Input and Output Pairs Examples -->
 
-<!-- 1) Section 1: Qualitative Examples
-
-2) Section 2: Selected Comparsion Samples between TeaserGen-PT and TeaserGen-LR
-
-3) Section 3: Zero-shot Examples
-
-4) Section 4: More Examples -->
 1) [Section 1: Qualitative Examples](#section-1-qualitative-examples)
 
 2) [Section 2: Zero-shot Examples](#section-2-zero-shot-examples)
