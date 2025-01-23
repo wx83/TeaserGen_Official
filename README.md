@@ -1,13 +1,7 @@
 ## TeaserGen: Generating Teasers for Long Documentaries
 
-### Dataset and Pretrained Model
-
-
-### Train
-
-
-### Inference
-
+## Dataset and Pretrained Model
+We will release our dataset and pretrained model soon.
 
 ### Citation
 
