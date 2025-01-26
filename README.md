@@ -1,11 +1,14 @@
-## TeaserGen: Generating Teasers for Long Documentaries
+# TeaserGen: Generating Teasers for Long Documentaries
 
-## Demo Page:
+**Note:** The codebase is still under construction. We will include the decoded array and pretrained model in the `reproducibility` folder.
 
-https://wx83.github.io/TeaserGen_Official/
+## Contents
 
-## Dataset and Pretrained Model
-We will release our dataset and pretrained model soon.
+1. [Demo Page](https://wx83.github.io/TeaserGen_Official/)
+2. [ ] Dataset and Pretrained Model
+3. [ ] Training
+4. [ ] Inference
+5. [ ] Evaluation
 
 ### Citation
 

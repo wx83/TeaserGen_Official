@@ -143,24 +143,6 @@ def replace_audio(video_input, audio_input, output_video):
     # Execute the FFmpeg command
     subprocess.run(command, check=True)
 
-# def merge_videos(video_files, output_path):
-#     # Write the file paths to a temporary text file
-#     with open("concat_file.txt", "w") as f:
-#         for file in video_files:
-#             f.write(f"file '{file}'\n")
-#     command = [
-#         'ffmpeg',
-#         '-f', 'concat',              # Use the concat demuxer
-#         '-safe', '0',                # Allow unsafe file paths
-#         '-i', 'concat_file.txt',     # Input list file
-#         '-c:v', 'libx264',           # Re-encode video using x264 codec
-#         '-preset', 'fast',           # Faster encoding with less compression
-#         '-crf', '22',                # Constant Rate Factor for quality
-#         '-c:a', 'aac',               # AAC audio codec
-#         '-b:a', '192k',              # Audio bitrate
-#         output_path                  # Output file path
-#     ]
-#     subprocess.run(command, check=True)
 
 def merge_videos(video_files, output_path):
     # Write the file paths to a temporary text file
@@ -330,8 +312,6 @@ def filter_intervals_by_duration(intervals, min_duration):
 # text, video_name, input_dir, mid, FPS, last, last_last, overlap_bound, min_duration
 def clip_interval_extraction(text, video_name, video_clip_folder, threshold, FPS, last, last_last, min_dur, tolerance =1):
     clip_sal_score = get_saliency_curve(text, video_name, video_clip_folder)
-# text, video_name, input_dir, best_threshold, FPS, global_track
-    # print(f"clip_sal_score = {clip_sal_score.shape}")
     save_arr_path = Path("/home/weihanx/videogpt/deepx_data6/demo/demo_ft_0925") / video_name[0] / video_name / f"sal_curve_{str(text)[:5]}.npy"
     save_arr_path.parent.mkdir(parents=True, exist_ok=True)
     if not save_arr_path.exists():
@@ -404,16 +384,9 @@ def binary_search_threshold(text, video_name, input_dir, FPS, text_duration, las
     best_threshold = None
     best_duration = float('inf')
     best_time_intervals = None
-    # avialble frames: total after removing the last and last_last
-
-    # print(f"text duration = {text_duration}")
     while high - low > precision:
         mid = (low + high) / 2
-        # text, video_name, video_clip_folder, threshold, FPS, calculate=False
-        # cannot find the treshold
         total_duration, _= clip_interval_extraction(text, video_name, input_dir, mid, FPS, last, last_last, min_duration)
-        # print(f"after removing duration = {total_duration} for threshold = {mid}")
-        # print(f"total_duration = {total_duration} for threshold = {mid}")
         if total_duration > text_duration:
             if total_duration < best_duration:
                 
@@ -439,12 +412,6 @@ def get_time_interval(input_dir, output_dir, narr_folder, video_name, FPS, speec
     body_path = Path("/home/weihanx/videogpt/data_deepx/documentary/sliced_video") / video_name[0] / video_name / "main.mp4"
     body_path_duration = get_video_duration(body_path)
     print(f"body_path_duration = {body_path_duration}")
-    # global_track = np.ones(int(body_path_duration * FPS))  # 1s = FPS frames
-    # print(f"gloabl_track = {global_track}")
-    # narr_scripts['text_duration'] = narr_scripts['id'].apply(lambda x: duration_len_dict[str(x)])
-
-    # # Then, sort the DataFrame by text_duration
-    # narr_scripts_sorted = narr_scripts.sort_values(by='text_duration', ascending=False)
 
     last_last = []
     last = []
@@ -453,14 +420,7 @@ def get_time_interval(input_dir, output_dir, narr_folder, video_name, FPS, speec
         id = index['id']
         text_duration = duration_len_dict[str(index['id'])]
         text_duration = text_duration + 1# 1 second buffer time: keep consistent
-        # for threshold in threshold_list:
-        #     # text, video_name, video_clip_folder, threshold, FPS
-        #     total_duration, time_intervals =clip_interval_extraction(text, video_name, input_dir, threshold, FPS, text_duration)
-        #     if time_intervals is not None and total_duration > text_duration: # video clip can be slightly longer than text duration
-        #         print(f"Total duration is greater than text duration: {total_duration} > {text_duration}")
-        #         clip_duration_dict[id] = time_intervals
-        #         break # find, then break, use the nearest 
-# 0.000001
+
         best_duration, time_intervals = binary_search_threshold(text, video_name, input_dir, FPS, text_duration, last, last_last, min_duration, min_threshold=-1, max_threshold=2,precision=0.000001)
         last_last = last
         last = time_intervals # update the last and last_last, each new interval cannot contain last_last and last
@@ -475,99 +435,4 @@ def get_time_interval(input_dir, output_dir, narr_folder, video_name, FPS, speec
 
 
 if __name__ == "__main__":
-    def get_video_duration(file_path):
-        video = VideoFileClip(str(file_path))
-        duration = video.duration  # Duration in seconds
-        return duration
-    a = get_video_duration(Path("/home/weihanx/videogpt/data_deepx/documentary/sliced_video/D/DTqi5f0ScKU/main.mp4"))
-    print("a = ", a)
-    overlap_bound, min_duration = 3,3
-    video_clip_folder = Path("/home/weihanx/videogpt/data_deepx/documentary/sliced_video")
-    video_file_path = Path("/home/weihanx/videogpt/workspace/start_code/eval/final_eval.txt")
-    speech_save_folder = Path("/home/weihanx/videogpt/deepx_data6/demo/speech")
-    demo_save_folder = Path("/home/weihanx/videogpt/deepx_data6/demo/demo_ft_0925")
-    narr_base_dir = Path("/home/weihanx/videogpt/deepx_data6/dataset")
-    input_dir = Path("/home/weihanx/videogpt/deepx_data6/demo/video_clip")
-
-    video_file_names = load_txt(video_file_path)
-    failed_video = []
-    for vd in video_file_names:
-        import time
-        time_start = time.time()
-        print(f"Processing video {vd}")
-        demo_final = demo_save_folder / vd[0] / vd / f"global_ft_processed_min{min_duration}_nonoverlap.mp4"
-        # if demo_final.exists():
-        #     continue
-        narr_path = narr_base_dir / vd[0] / vd / "ts_comb.csv"
-        if not narr_path.exists():
-            print.debug(f"narr_path does not exist: {narr_path}")
-        else:
-            try:
-                time_duration_path = speech_save_folder / vd[0] / vd / f"speech_duration.json"
-                if not time_duration_path.exists(): # narration should be shared
-                    get_duration_csv(vd, narr_base_dir, speech_save_folder, time_duration_path) # get durtion
-                time_interval_path = demo_save_folder / vd[0] / vd / f"time_interval_min_{min_duration}.json"
-                # if not time_interval_path.exists():
-                get_time_interval(input_dir, demo_save_folder, narr_base_dir, vd, FPS, speech_save_folder, min_duration)
-                # get_time_interval(input_dir, demo_save_folder, narr_base_dir, vd, FPS, speech_save_folder)
-                time_end = time.time()
-                print(f"Time used: {time_end - time_start}")
-                print(f"Finished processing {vd}")
-            except Exception as e:
-                print(f"Error processing {vd}: {e}")
-                failed_video.append(vd)
-                continue
-
-
-
-    #     # start to get demo
-    #     try:
-    #         output_video_files = []
-    #         time_intervals = load_json(demo_save_folder / vd[0] / vd / f"time_interval_min_{min_duration}.json")
-    #         # key is the id column
-    #         for key, value in time_intervals.items(): # key is a number
-    #             video_path = video_clip_folder / vd[0] / vd / f"main.mp4" # extract from body contents
-    #             video_clip = demo_save_folder / vd[0] / vd / f"tf_clip_{key}.mp4" # output
-    #             # print(f"video_clip_num = {key}")
-    #             video_clip_interval = value
-    #             extract_and_concat_segments(str(video_path), video_clip_interval, str(video_clip)) # form chunk 1
-                
-    #             # only keep sound effects
-    #             print(f"error")
-    #             video_clip_audio_path = demo_save_folder / vd[0] / vd / f"{key}_concat_audio.wav"
-    #             extract_audio_wav_ffmpeg(str(video_clip), str(video_clip_audio_path))
-    #             # video_name,audio_path, out_dir, fig_dir, slicer, threshold, part
-    #             separate_sf_song(vd, video_clip_audio_path, demo_save_folder, demo_save_folder, slicer, NOISE_THRES, "merged")
-    #             # new_sfx_file = '/home/weihanx/videogpt/data_deepx/documentary/prelim_cut/1/1akcYVlAvjE/effect_merged.wav'
-    #             new_sfx_file = demo_save_folder / vd[0] / vd / "effect_merged.wav"
-    #             # only keep sfx 
-    #             new_v_a_file = demo_save_folder / vd[0] / vd / f"{key}_concat_newaudio.mp4"
-    #             replace_audio(video_clip, new_sfx_file, new_v_a_file)
-    #             # 
-    #             # get prompt
-
-    #             clip_speech_path = speech_save_folder / vd[0] / vd / f"chunk_{key}_speech.wav"
-    #             video_audio_clip = demo_save_folder / vd[0] / vd / f"{key}_va_new_concat.mp4"
-    #             merge_audio_video(str(new_v_a_file), str(clip_speech_path), str(video_audio_clip)) # TTS:Balacoon🦝 Text-to-Speech
-    #             output_video_files.append(video_audio_clip)
-
-    #             # remove all intermediate file to save memory
-    #             if video_clip_audio_path.exists():
-    #                 video_clip_audio_path.unlink()
-    #             if new_sfx_file.exists():
-    #                 new_sfx_file.unlink()
-    #             if new_v_a_file.exists():
-    #                 new_v_a_file.unlink()
-    #             if video_clip.exists():
-    #                 video_clip.unlink()
-    #         #     # put all v-a clips together
-            
-    #         output_file = demo_save_folder / vd[0] / vd / f"global_ft_processed_min{min_duration}_nonoverlap.mp4"
-    #         merge_videos(output_video_files, output_file)
-    #         print(f"Finish construct demo = {output_file}")
-    #     except Exception as e:
-    #         print(f"Error processing demo {vd}: {e}")
-    #         failed_video.append(vd)
-    #         continue
-    # save_txt(demo_save_folder / "failed_video.txt", failed_video) 
-        
+    pass

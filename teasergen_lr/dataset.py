@@ -53,11 +53,7 @@ class SentenceImageDataset(Dataset):
         # text input
         text_dict = load_json(self.sentence_json) # all text is in this text dict
         for clip_dict in self.annotation[docu_name]: # the doucmentary that I am interested in
-            clip_name = clip_dict["video"] # find the video that has different size
-            # load the scene annotation for this video
-            # scene_path = self.scene_dir / clip_name[0] / f"{clip_name}.npy"
-            # scene_annotation = np.load(scene_path, allow_pickle=True)
-            # print(f"clip_name = {clip_name}")
+            clip_name = clip_dict["video"] 
             sentence_indices = clip_dict["sentences"] # indicate frame embedding belonging to which sentecnes
 
             # print(f"len of sentence = {len(sentence_indices)}")
@@ -70,8 +66,7 @@ class SentenceImageDataset(Dataset):
                 sentence_embeddings.append(sentence_embedding)
                 sentence_text_list.append(sentence_text) # number of repetetivion for diffsuion prior
                 image_indices = clip_dict["frame_indices"]
-                # print(f"image_indices: {image_indices}")
-            # apply transformer prior before saving
+
             if self.image_emb_dir != None:
                 image_emb_path = self.image_emb_dir / f"{docu_name}_clip.npy" # all number of frames
                 image_embedding = np.load(image_emb_path, allow_pickle=True)
@@ -87,26 +82,18 @@ class SentenceImageDataset(Dataset):
         if self.image_emb_dir == None:
             image_embeddings = None
             # Concatenate all sentence embeddings along the sequence dimension
-        sentence_embeddings = np.vstack(sentence_embeddings)  # Shape: (sequence_len, 768)
-        # print(f"docu_name: {docu_name}, sentence_embeddings shape: {sentence_embeddings.shape}, image_embeddings shape: {image_embeddings.shape}")
-        # print(f"sentence_text_list = {sentence_text_list}")
-        # print(f"shape of sentence = {sentence_embeddings.shape}")
+        sentence_embeddings = np.vstack(sentence_embeddings)  
         
         return sentence_embeddings, image_embeddings, docu_name, sentence_text_list # should return a tuple: sentence embeing, image embeding
    
     @ staticmethod # not need for  any instance of varibale in the class
     def collate_fn(batch):
-        # Unpack the batch into separate lists of sentence embeddings and image embeddings
-    #    sentence_text_list is also a list, list of list
         sentences, images, docu_name, sentence_text_list = zip(*batch)
         if images is None:
             images = [None] * len(sentences)
         # Calculate the maximum sequence length in the batch
         max_sentence_len = max(s.shape[0] for s in sentences)
-        # max_image_len = max(i.shape[0] for i in images)
 
-        # Ensure consistency: max sequence length should be the same for both sentences and images
-        # max_seq_len = max(max_sentence_len, max_image_len)
         max_seq_len = max_sentence_len
         # Initialize lists to hold the padded data and masks
         padded_sentences = []
@@ -116,15 +103,10 @@ class SentenceImageDataset(Dataset):
         for sentence_emb, image_emb in zip(sentences, images):
             # Get the lengths of the current sentence and image embeddings
             sentence_len = sentence_emb.shape[0]
-
-            # assert len(scene_annotation) == sentence_len.shape[0], f"during training, should have equal length" # This is for training, sentence length should be the same as scene annotation
-            # Pad the sentence embeddings to the max sequence length
             sentence_padding_len = max_seq_len - sentence_len
             sentence_padding = np.zeros((sentence_padding_len, sentence_emb.shape[1])) # pad by zero
             padded_sentence = np.vstack([sentence_emb, sentence_padding])
-            # shaoe: (seq_len, )
-            # padded_scene_annotation = np.concatenate([scene_annotation, np.zeros(sentence_padding_len)])
-            # padded_scene_annotations.append(padded_scene_annotation) # padd to desired length for each sentence
+
             padded_sentences.append(padded_sentence)
             
             # Create the sentence mask: pytorch build in mask: 1 should be ignored, 0 should be kept
@@ -139,9 +121,6 @@ class SentenceImageDataset(Dataset):
                 image_padding = np.zeros((image_padding_len, image_emb.shape[1]))
                 padded_image = np.vstack([image_emb, image_padding])
             padded_images.append(padded_image)
-
-        # Stack the padded sentences, images, and masks into batched tensors
-        # scene_batch = torch.tensor(np.stack(padded_scene_annotations), dtype=torch.float32)  # Shape: (batch_size, max_seq_len)
         sentence_batch = torch.tensor(np.stack(padded_sentences), dtype=torch.float32)  # Shape: (batch_size, max_seq_len, 768)
         image_batch = torch.tensor(np.stack(padded_images), dtype=torch.float32)  # Shape: (batch_size, max_seq_len, 2048)
         # sentnce and image mask should be the same
@@ -160,27 +139,19 @@ if __name__ == "__main__":
     train_annotate_main = Path("/home/weihanx/videogpt/workspace/transformer_prior/main/train_0103_main_comb.json")
     sentence_json_intro = Path("/home/weihanx/videogpt/workspace/transformer_prior/intro/intro_text_name.json") # why sentence dir
     sentence_json_main = Path("/home/weihanx/videogpt/workspace/transformer_prior/main/main_text_name.json")
-
-    # combined_dict_main = load_json(train_annotate_main) # smaller set
-    # train_eval_list_main = list(combined_dict_main.keys()) 
     combined_dict_intro = load_json(train_annotate_intro) # smaller set
     train_eval_list_intro = list(combined_dict_intro.keys())
     # common_keys = list(set(train_eval_list_main).intersection(train_eval_list_intro))
     common_keys =train_eval_list_intro
     print(f"len of common keys = {len(common_keys)}")
     train_list = common_keys
-    # train_list = common_keys[:int(len(common_keys)*0.8)]
-    # eval_list = common_keys[int(len(common_keys)*0.8):]
-    # can be combined or trained separately but # use the same set of filenames
+
     train_dataset_intro = SentenceImageDataset(train_list, train_annotate_intro, image_emb_dir_intro, sentence_emb_intro_dir, sentence_json_intro)
     # train_dataset_main = SentenceImageDataset(train_list, train_annotate_main, image_emb_dir_main, sentence_emb_main_dir, sentence_json_main)
     # concatenate two dataset
     train_dataset = train_dataset_intro
     # train_dataset = torch.utils.data.ConcatDataset([train_dataset_intro, train_dataset_main]) # should learn separately or together? They should not have temporal dependence
     bsz = 32
-    # val_dataset_intro = SentenceImageDataset(eval_list, train_annotate_intro, image_emb_dir_intro, sentence_emb_intro_dir, sentence_json_intro)
-    # val_dataset_main = SentenceImageDataset(eval_list, train_annotate_main, image_emb_dir_main, sentence_emb_main_dir, sentence_json_main)
-    # val_dataset = torch.utils.data.ConcatDataset([val_dataset_intro, val_dataset_main])
     train_dataloader = DataLoader(
         train_dataset,
         batch_size=bsz,  # Set your desired batch size
@@ -189,12 +160,7 @@ if __name__ == "__main__":
     )
     print(f"len of train_loader = {len(train_dataloader)}") # final check in dataloader
 
-    # valid_dataloader = DataLoader(
-    #     val_dataset,
-    #     batch_size=bsz,  # Set your desired batch size
-    #     shuffle=True,  # Whether to shuffle the data at each epoch
-    #     collate_fn=SentenceImageDataset.collate_fn  # Use the custom collate function
-    # )
+
     for sentence_batch, image_batch, sentence_mask, docu_name, sentence_text in train_dataloader:
         print(f"Loader Sentence batch shape: {sentence_batch.shape}")  # Should be (batch_size, 768)
         print(f"Loader Image batch shape: {image_batch.shape}")  # already check: 4, 83, 512

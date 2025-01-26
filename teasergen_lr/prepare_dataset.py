@@ -225,20 +225,7 @@ def load_frames_from_video(video_dir):
     frames = [Image.open(video_dir/f) for f in frame_files]
     return frames
 
-# def apply_resnet_to_frames(frames, model, transform, device="cuda"):
-#     """Apply ResNet model to frames to generate embeddings."""
-#     embeddings = []
-#     for frame in frames:
-#         frame_tensor = transform(frame).unsqueeze(0)  # Add batch dimension
-#         # print(f"frame_tensor shape: {frame_tensor.shape} should be 1 x 3 x 224 x 224")
-#         with torch.no_grad():
-#             model = model.to(device)
-#             frame_tensor = frame_tensor.to(device)
-#             embedding = model(frame_tensor).squeeze(0).cpu().numpy()  # Remove batch dimension: 44, 2048, 1, 1
-#             # print(f"embeddings shape: {np.array(embedding).shape} should be num_frames x embedding_dim")
-#         embeddings.append(embedding)
 
-#     return np.array(embeddings)
 
 def apply_clip_to_frames(frames, model, processor, device="cuda"):
     embeddings = []
@@ -263,10 +250,6 @@ def generate_image_emb_b32(input_dir, video_name_path, output_dir, device = "cud
     fail_dataset = []
     model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
     processor = AutoProcessor.from_pretrained("openai/clip-vit-base-patch32")
-    # model = models.resnet50(pretrained=True)
-    # # print(f"device: {model.device}")
-    # model = torch.nn.Sequential(*(list(model.children())[:-1]))  # Remove the last classification layer, only extract features
-    # check run on cuda
 
     model.eval()
 
@@ -304,10 +287,6 @@ def generate_image_emb_l14(input_dir, video_name_path, output_dir, device = "cud
     model = CLIPModel.from_pretrained("openai/clip-vit-large-patch14")
     processor = AutoProcessor.from_pretrained("openai/clip-vit-large-patch14")
 
-    # model = models.resnet50(pretrained=True)
-    # # print(f"device: {model.device}")
-    # model = torch.nn.Sequential(*(list(model.children())[:-1]))  # Remove the last classification layer, only extract features
-    # check run on cuda
 
     model.eval()
 
@@ -469,67 +448,4 @@ def extract_scene_list(video_name_path, input_dir, input_narr_dir, output_dir):
         
 
 if __name__ == "__main__":
-    # generate_train_data()
-    # output_dir = Path("/home/weihanx/videogpt/workspace/clip_sent_text_emb")
-    # output_dir.mkdir(parents=True, exist_ok=True)
-    # generate_text_emb(output_dir, model="openai/clip-vit-base-patch32") # tmux: extract_text_feat: npz
-    # video_name_path = Path("/home/weihanx/videogpt/workspace/start_code/eval/training_1211.txt")
-    # input_dir = Path('/home/weihanx/videogpt/deepx_data7/scene_intro') # include non narration scene
-    # input_narr_dir = Path("/home/weihanx/videogpt/deepx_data6/dataset")
-    # output_dir = Path("/home/weihanx/videogpt/deepx_data7/scene_intro_training")
-    # output_dir.mkdir(parents=True, exist_ok=True)
-    # extract_scene_list(video_name_path, input_dir, input_narr_dir, output_dir)
-    file_name_path = Path("/home/weihanx/videogpt/workspace/transformer_prior/intro_text_name.txt") # all available text after embedding
-    output_dir = Path("/home/weihanx/videogpt/workspace/transformer_prior/intro")
-    output_dir.mkdir(parents=True, exist_ok=True)
-    screen_play_folder = Path("/home/weihanx/videogpt/deepx_data6/screen_play_intro_train")
-    generate_train_main(file_name_path, output_dir, screen_play_folder)
-    input_json = output_dir / "train_0103_intro.jsonl"
-    output_json = output_dir / "train_0103_intro_comb.json"
-    organize_dictionaries(input_json, output_json)
-
-    # generate_sentence_list("/home/weihanx/videogpt/workspace/transformer_prior/test_gpt.json", "/home/weihanx/videogpt/workspace/transformer_prior/test_gpt_sentence_list.json")
-    # generate_sentence_list("/home/weihanx/videogpt/workspace/transformer_prior/test_comb.json", "/home/weihanx/videogpt/workspace/transformer_prior/test_sentence_list.json")
-    # # generate_train_data() # tmux: test_data
-    # video_name_path = Path("/home/weihanx/videogpt/workspace/start_code/eval/training_0905.txt")
-    # input_dir = Path("/home/weihanx/videogpt/deepx_data7/scene_intro")
-    # output_dir = Path("/home/weihanx/videogpt/workspace/transformer_prior")
-    # scene_list(video_name_path, input_dir, output_dir)
-    # # input_dir = Path("/home/weihanx/videogpt/deepx_data6/zeroshotvideo_clip_frame")
-    # # # video_name_list = Path("/home/weihanx/videogpt/workspace/start_code/eval/final_eval.txt")
-    # # video_name_list = Path("/home/weihanx/videogpt/0719_data_name.txt")
-    # video_name_list = Path("/home/weihanx/videogpt/deepx_data6/zeroshot_name.txt")
-    # # output_dir = Path("/home/weihanx/videogpt/workspace/clip_image_emb_full_768") #tmux: extract_feat
-    # # # output_dir = Path("/home/weihanx/videogpt/workspace/clip_image_emb_full") #tmux: extract_feat
-    # # output_dir.mkdir(parents=True, exist_ok=True)
-    # # # # # organize_dictionaries()
-    # output_dir = Path("/home/weihanx/videogpt/deepx_data6/zeroshot_clip_frame_emb_512")
-    # output_dir.mkdir(parents=True, exist_ok=True)
-    # generate_image_emb_b32(input_dir, video_name_list, output_dir)#tmux: extract_feat
-    # generate_image_emb(input_dir, video_name_list, output_dir)#tmux: extract_feat
-    # input_dir = Path("/home/weihanx/videogpt/workspace/start_code/eval/final_eval.txt")
-    # # input_file = Path("/home/weihanx/videogpt/workspace/transformer_prior/test_0905.jsonl")
-    # # test_json_file = Path("/home/weihanx/videogpt/workspace/transformer_prior/test_0905.json")
-    # generate_valid_data(input_dir) # tmux: test_data
-    # generate_train_data()
-    # organize_dictionaries(input_file, output_file) # tmux: test_data
-    # input_file = Path("/home/weihanx/videogpt/workspace/transformer_prior/test_0915_2.jsonl")
-    # output_json_file = Path("/home/weihanx/videogpt/workspace/transformer_prior/train_0915_comb_2.json")
-    # organize_dictionaries(input_file, output_file) # tmux: test_data
-    # output_file
-    # generate_sentence_list(output_json_file, "/home/weihanx/videogpt/workspace/transformer_prior/train_sentence_list.json") 
-    # # input_dir = Path("/home/weihanx/videogpt/deepx_data6/gpt_demo/narration_0824")
-    # # output_dir = Path("/home/weihanx/videogpt/workspace/clip_gpt_text_emb")
-    # input_dir = Path("/home/weihanx/videogpt/deepx_data6/gpt_demo/speech_0825")
-    # output_path = Path("/home/weihanx/videogpt/workspace/transformer_prior/test_gpt.json")
-    # video_name_path = Path("/home/weihanx/videogpt/workspace/start_code/eval/final_eval.txt")
-    # generate_gpt_text_emb(video_name_path, input_dir, output_dir, device="cuda")
-    # # generate_gpt_test_data(video_name_path, input_dir, output_path, device = "cuda") # I will use the generated text and its length
-    # # output_file = Path("/home/weihanx/videogpt/workspace/transformer_prior/test_sentence_list_0905.json")
-    # video_name_path = Path("/home/weihanx/videogpt/deepx_data6/zeroshot_name.txt")
-    # input_file = Path("/home/weihanx/videogpt/deepx_data6/gpt_demo/speech_zeroshot")
-    # output_path = Path("/home/weihanx/videogpt/workspace/transformer_prior/test_gpt_zeroshot.json")
-    # # generate_gpt_test_data(video_name_path, input_file, output_path)
-    # output_file_sentence = Path("/home/weihanx/videogpt/workspace/transformer_prior/test_sentence_zeroshot.json")
-    # generate_sentence_list(output_path, output_file_sentence)
-    # # generate_sentence_list(test_json_file, output_file)
+    pass

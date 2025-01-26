@@ -78,12 +78,4 @@ def model_config(model_path):
     print(f"total params = {total_params}")
 
 if __name__ == "__main__":
-    apply_diffusion_prior = False
-    model_dir = Path("/home/weihanx/videogpt/workspace/transformer_prior/model/no_diffusion_prior/model_False_0_l2_prior_0111_narrator_True.pth")
-    device = 'cuda:0'
-    narration_type = 'gpt'
-    decode_method = 'beam_search_window'
-    smooth = True
-    body_contents_dir = Path("/home/weihanx/videogpt/data_deepx/documentary/test_embedding/clip_frame_768_emb_main")
-    output_dir = Path("/home/weihanx/videogpt/workspace/transformer_prior/decode_result")
-    run_test(apply_diffusion_prior, model_dir, device, narration_type, decode_method, smooth, body_contents_dir, output_dir)
+    pass
