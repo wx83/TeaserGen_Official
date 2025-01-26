@@ -13,7 +13,6 @@ __TeaserGen: Generating Teasers for Long Documentaries__
 {:.center}
 
 
-{% include youtube_player.html id="7g0F0lMs18Y" %}
 
 ## Contents
 
