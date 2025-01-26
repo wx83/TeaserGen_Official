@@ -3,14 +3,13 @@ __TeaserGen: Generating Teasers for Long Documentaries__
 
 [Weihan Xu](https://wx83.github.io/) <sup>1</sup> &emsp;
 [Paul Pu Liang](https://pliang279.github.io/) <sup>2</sup> &emsp;
-[Haven Kim] <sup>3</sup> &emsp;
+[Haven Kim](https://havenpersona.github.io/) <sup>3</sup> &emsp;\\
 [Julian McAuley](https://cseweb.ucsd.edu/~jmcauley/) <sup>3</sup> &emsp;
-[Taylor Berg-Kirkpatrick](https://cseweb.ucsd.edu/~tberg/) <sup>3</sup>\\
+[Taylor Berg-Kirkpatrick](https://cseweb.ucsd.edu/~tberg/) <sup>3</sup>
 [Hao-Wen Dong](https://salu133445.github.io/) <sup>4</sup>  
-<sup>1</sup>Duke University  
-<sup>2</sup>MIT  
+<sup>1</sup>Duke University  <sup>2</sup>MIT  
 <sup>3</sup>University of California San Diego  
-<sup>4</sup>University of California San Diego  
+<sup>4</sup>University of Michigan 
 {:.center}
 
 
