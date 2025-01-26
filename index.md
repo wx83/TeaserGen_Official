@@ -7,8 +7,9 @@ __TeaserGen: Generating Teasers for Long Documentaries__
 [Julian McAuley](https://cseweb.ucsd.edu/~jmcauley/) <sup>3</sup> &emsp;
 [Taylor Berg-Kirkpatrick](https://cseweb.ucsd.edu/~tberg/) <sup>3</sup> &emsp;
 [Hao-Wen Dong](https://salu133445.github.io/) <sup>4</sup>  
-<sup>1</sup>Duke University <sup>2</sup>MIT <sup>3</sup>University of California San Diego  
-<sup>4</sup>University of Michigan 
+<sup>1</sup> Duke University &nbsp;&nbsp;&nbsp;<sup>2</sup> MIT &nbsp;&nbsp;&nbsp;<sup>3</sup> University of California San Diego &nbsp;&nbsp;&nbsp;  
+<sup>4</sup> University of Michigan
+
 {:.center}
 
 
