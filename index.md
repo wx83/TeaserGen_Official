@@ -11,6 +11,8 @@ __TeaserGen: Generating Teasers for Long Documentaries__
 <sup>4</sup> University of Michigan
 {:.center}
 
+[Dataset and Codebase](https://github.com/wx83/TeaserGen_Official/tree/main)
+
 
 
 ## Contents
