@@ -4,7 +4,7 @@ This repository contains the official implementation of "TeaserGen: Generating T
 
 **TeaserGen:Generating Teasers for Long Documentaries**
 
-Weihan Xu, Paul Pu Liang , Haven Kim, Julian McAuley, Taylor Berg-Kirkpatrick, Hao-Wen Dong
+Weihan Xu, Paul Pu Liang, Haven Kim, Julian McAuley, Taylor Berg-Kirkpatrick, Hao-Wen Dong
 
 The International Conference on Learning Representations (ICLR), 2025
 
@@ -12,16 +12,16 @@ The International Conference on Learning Representations (ICLR), 2025
 
 ## Contents
 0. [x] Overview
-1. [x] Environment
+1. [x] Prerequisites
 2. [x] Dataset Annotation and Processing
 3. [x] Narration Generation
 4. [x] TeaserGen-PT 
 5. [x] TeaserGen-LR 
 6. [x] Evaluation
-7. [x] Final Note
-8. [x] Acknowledgement
-9. [x] Citation
-10. [ ] Interactive Demo on Gradio: Coming Soon!
+7. [x] Acknowledgement
+8. [ ] Interactive Demo on Gradio: Coming Soon!
+9. [x] Final Note
+10. [x] Citation
 
 ## Overview
 
@@ -35,26 +35,26 @@ TeaserGen-LR:
 ![TeaserGen-LR](pictures/TeaserGen-LR.png)
 
 
-## Environment
+## Prerequisites
 
 ```bash
 conda env create -f newgpt.yml
 ```
 
 ## Dataset Annotation and Processing
-We annotate the separating point of teaser and main documentary and saved in annotation/annotation.csv.
+We annotate the separating point of teaser and main documentary and save the annotations in annotation/annotation.csv.
 
 You can find detailed data processing code under ./data_preprocessing
 
 The general pipeline for data processing:
 
-1) Download Raw data from youtube: video_download.py
+1) Download raw data from youtube: video_download.py
 
 2) Preprocess raw video by separating the audio track from the video: video_preprocessing.py
 
 3) Audio Separation: audio_preprocess.py
 
-4) Transcription: Timestamped-whisper or whisperX
+4) Transcription: Timestamped-whisper or whisperX: whisperx.py
 
 5) Prepare your CLIP feature: Extract frames from video with frame_extraction.py and then use clip_frame_feat_extractor.py and clip_text_feat_extractor.py
 
@@ -73,7 +73,7 @@ If you want to use the finetuned model on DocumentaryNet: You can find code ./te
 ## TeaserGen-LR 
 1) Prepare your training dataset: ./teasergen_lr/prepare_dataset.py
 
-2) Training: ./train_epoch.py and ./train_step.py
+2) Training: ./train_epoch.py or ./train_step.py
 
 3) Decoding: inference.py
 
@@ -84,6 +84,10 @@ If you want to use the finetuned model on DocumentaryNet: You can find code ./te
 2) Evaluate finetuned highlight detection model: highlight_eval.py
 
 3) Evaluation: ./eval/evaluation.py
+
+## Interactive Demo:
+
+We will release interactive demonstration shortly.
 
 ## Acknowledgement
 WhipserX is based on [WhipserX](https://github.com/m-bain/whisperX)
@@ -97,7 +101,7 @@ We thank the authors for their open-source contributions.
 
 ## Final Note
 
-Due to copyright concerns, we are unable to release the raw data. However, please note that processing some videos may require YouTube Premium. If you encounter any issues with your data or have any questions, feel free to reach out to me at weihan.xu@duke.edu. 
+Due to copyright concerns, we are unable to release the raw data. However, please note that processing some videos may require YouTube Premium. If you encounter any issues with your data or have any questions, feel free to reach out to Weihan at weihan.xu@duke.edu. 
 
 
 ## Citation
@@ -110,4 +114,3 @@ Due to copyright concerns, we are unable to release the raw data. However, pleas
     year={2025}
 }
 ```
-
