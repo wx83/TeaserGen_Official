@@ -79,9 +79,9 @@ If you want to use the finetuned model on DocumentaryNet: You can find code ./te
 
 
 ## Evaluation:
-1) Generate vtgscore array: vtgscore.py
+1) Generate vtgscore array: ./eval/vtgscore.py
 
-2) Evaluate finetuned highlight detection model: highlight_eval.py
+2) Evaluate finetuned highlight detection model: ./eval/highlight_eval.py
 
 3) Evaluation: ./eval/evaluation.py
 
