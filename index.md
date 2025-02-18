@@ -9,9 +9,12 @@ __TeaserGen: Generating Teasers for Long Documentaries__
 [Hao-Wen Dong](https://salu133445.github.io/) <sup>4</sup>  
 <sup>1</sup> Duke University &nbsp;&nbsp;&nbsp;<sup>2</sup> MIT &nbsp;&nbsp;&nbsp;<sup>3</sup> University of California San Diego &nbsp;&nbsp;&nbsp;  
 <sup>4</sup> University of Michigan
+
+[Codebase](https://github.com/wx83/TeaserGen_Official/tree/main)
+
 {:.center}
 
-[Dataset and Codebase](https://github.com/wx83/TeaserGen_Official/tree/main)
+
 
 
 
@@ -894,3 +897,5 @@ __TeaserGen: Generating Teasers for Long Documentaries__
   </tr>
 </table>
 </div>
+
+*Disclaimer: We believe the use of materials in this demonstration falls under "fair use" for academic research purposes. We do not claim ownership of any copyrighted content included in this demo. Copyright holders who believe their content has been used inappropriately are encouraged to contact us for its removal.*
