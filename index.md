@@ -1,22 +1,18 @@
-__TeaserGen: Generating Teasers for Long Documentaries__
-{:.center .larger}
+<p align="center">
+<strong><a href="https://wx83.github.io/">Weihan Xu</a></strong> <sup>1</sup> &emsp;
+<strong><a href="https://pliang279.github.io/">Paul Pu Liang</a></strong> <sup>2</sup> &emsp;
+<strong><a href="https://havenpersona.github.io/">Haven Kim</a></strong> <sup>3</sup> &emsp;<br>
+<strong><a href="https://cseweb.ucsd.edu/~jmcauley/">Julian McAuley</a></strong> <sup>3</sup> &emsp;
+<strong><a href="https://cseweb.ucsd.edu/~tberg/">Taylor Berg-Kirkpatrick</a></strong> <sup>3</sup> &emsp;
+<strong><a href="https://salu133445.github.io/">Hao-Wen Dong</a></strong> <sup>4</sup><br>
+<sup>1</sup> Duke University &emsp;<sup>2</sup> MIT &emsp;<sup>3</sup> University of California San Diego &emsp;<sup>4</sup> University of Michigan
+</p>
 
-[Weihan Xu](https://wx83.github.io/) <sup>1</sup> &emsp;
-[Paul Pu Liang](https://pliang279.github.io/) <sup>2</sup> &emsp;
-[Haven Kim](https://havenpersona.github.io/) <sup>3</sup> &emsp;\\
-[Julian McAuley](https://cseweb.ucsd.edu/~jmcauley/) <sup>3</sup> &emsp;
-[Taylor Berg-Kirkpatrick](https://cseweb.ucsd.edu/~tberg/) <sup>3</sup> &emsp;
-[Hao-Wen Dong](https://salu133445.github.io/) <sup>4</sup>  
-<sup>1</sup> Duke University &nbsp;&nbsp;&nbsp;<sup>2</sup> MIT &nbsp;&nbsp;&nbsp;<sup>3</sup> University of California San Diego &nbsp;&nbsp;&nbsp;  
-<sup>4</sup> University of Michigan
+<p align="center">
+<strong><a href="https://github.com/wx83/TeaserGen_Official/tree/main"> [Codebase] </a></strong> &emsp;
+<strong><a href="https://arxiv.org/pdf/2410.05586"> [Paper] </a></strong>
+</p>
 
-{:.center}
-
-{:.center .larger}
-
-[Codebase](https://github.com/wx83/TeaserGen_Official/tree/main)
-
-{:.center}
 
 
 
