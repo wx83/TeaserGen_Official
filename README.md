@@ -19,10 +19,11 @@ The International Conference on Learning Representations (ICLR), 2025
 4. [x] TeaserGen-PT 
 5. [x] TeaserGen-LR 
 6. [x] Evaluation
-7. [x] Acknowledgement
-8. [ ] Interactive Demo on Gradio: Coming Soon!
-9. [x] Final Note
-10. [x] Citation
+8. [x] Reproducibility
+9. [ ] Interactive Demo on Gradio: Coming Soon!
+10. [x] Acknowledgement
+11. [x] Final Note
+12. [x] Citation
 
 ## Overview
 
@@ -85,6 +86,9 @@ If you want to use the finetuned model on DocumentaryNet: You can find code ./te
 2) Evaluate finetuned highlight detection model: ./eval/highlight_eval.py
 
 3) Evaluation: ./eval/evaluation.py
+
+## Reproducibility
+We put all decoded array and time intervals within ./reproducibility folder. 
 
 ## Interactive Demo
 
