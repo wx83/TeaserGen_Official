@@ -12,18 +12,19 @@ The International Conference on Learning Representations (ICLR), 2025
 [[Demo Page](https://wx83.github.io/TeaserGen_Official/)] [[Pretrained Model](https://drive.google.com/drive/folders/1A35frASy1fkLKzfEpPs2unBEYg1fpR6R?dmr=1&ec=wgc-drive-globalnav-goto)]
 
 ## Contents
-0. [x] Overview
-1. [x] Prerequisites
-2. [x] Dataset Annotation and Processing
-3. [x] Narration Generation
-4. [x] TeaserGen-PT 
-5. [x] TeaserGen-LR 
-6. [x] Evaluation
-8. [x] Reproducibility
-9. [ ] Interactive Demo on Gradio: Coming Soon!
-10. [x] Acknowledgement
-11. [x] Final Note
-12. [x] Citation
+0. [x] [Overview](#overview)
+1. [x] [Prerequisites](#prerequisites)
+2. [x] [Dataset Annotation and Processing](#dataset-annotation-and-processing)
+3. [x] [Narration Generation](#narration-generation)
+4. [x] [TeaserGen-PT](#teasergen-pt)
+5. [x] [TeaserGen-LR](#teasergen-lr)
+6. [x] [Evaluation](#evaluation)
+7. [x] [Reproducibility](#reproducibility)
+8. [] [Interactive Demo on Gradio: Coming Soon!](#interactive-demo-on-gradio-coming-soon)
+9. [x] [Acknowledgement](#acknowledgement)
+10. [x] [Final Note](#final-note)
+11. [x] [Citation](#citation)
+
 
 ## Overview
 
