@@ -20,7 +20,7 @@ The International Conference on Learning Representations (ICLR), 2025
 5. [x] [TeaserGen-LR](#teasergen-lr)
 6. [x] [Evaluation](#evaluation)
 7. [x] [Reproducibility](#reproducibility)
-8. [] [Interactive Demo on Gradio: Coming Soon!](#interactive-demo-on-gradio-coming-soon)
+8. [ ] [Interactive Demo on Gradio: Coming Soon!](#interactive-demo-on-gradio-coming-soon)
 9. [x] [Acknowledgement](#acknowledgement)
 10. [x] [Final Note](#final-note)
 11. [x] [Citation](#citation)
