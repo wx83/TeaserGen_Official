@@ -89,7 +89,7 @@ If you want to use the finetuned model on DocumentaryNet: You can find code ./te
 3) Evaluation: ./eval/evaluation.py
 
 ## Reproducibility
-We put all decoded array and time intervals within ./reproducibility folder. 
+We put all decoded array(TeaserGen-LR) and time intervals(TeaserGen-PT) within ./reproducibility folder. We also provide the pretrained model at the shared google drive. 
 
 ## Interactive Demo
 
