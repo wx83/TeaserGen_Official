@@ -110,6 +110,7 @@ class SentenceImageDataset(Dataset):
             padded_sentences.append(padded_sentence)
             
             # Create the sentence mask: pytorch build in mask: 1 should be ignored, 0 should be kept
+            # reference: https://pytorch.org/docs/stable/generated/torch.nn.Transformer.html#torch.nn.Transformer
             sentence_mask = np.concatenate([np.zeros(sentence_len), np.ones(sentence_padding_len)])
             sentence_masks.append(sentence_mask)
             if image_emb is None:
