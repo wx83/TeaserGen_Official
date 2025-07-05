@@ -67,7 +67,7 @@ def diarize_audio(video_name_path, input_wav_dir, output_dir, part, bitrate='192
         # # # 2. Align whisper output
         model_a, metadata = whisperx.load_align_model(language_code="en", device=device)
         result = whisperx.align(result["segments"], model_a, metadata, audio, device, return_char_alignments=False)
-        diarize_model = whisperx.DiarizationPipeline(use_auth_token='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', device=device)
+        diarize_model = whisperx.DiarizationPipeline(use_auth_token=None, device=device)
 
 
         diarize_segments = diarize_model(audio)
